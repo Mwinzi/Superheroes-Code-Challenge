@@ -5,6 +5,6 @@ Rails.application.routes.draw do
   # root "articles#index"
   resources :hero_powers, only: [:create]
   resources :powers, only: [:index, :show, :update]
-  resources :heros, only: [:index]
-  get '/heros/:id', to: 'heros#show' 
+  resources :heroes, only: [:index]
+  get '/heroes/:id', to: 'heroes#show' 
 end
