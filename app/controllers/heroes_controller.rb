@@ -1,49 +1,22 @@
 class HeroesController < ApplicationController
-    before_action :set_hero, only: %i[ show update destroy ]
+    rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
 
-    # GET /heroes
+    
     def index
-    @heroes = Hero.all
-    render json: @heroes
+        heroes = Hero.all
+        render json: heroes
     end
 
-    # GET /heroes/1
     def show
-        render json: @hero, serializer: HeroPowerSerializer
-    end
-
-    # POST /heroes
-    def create
-    @hero = Hero.new(hero_params)
-
-    if @hero.save
-        render json: @hero, status: :created, location: @hero
-    else
-        render json: @hero.errors, status: :unprocessable_entity
-    end
-    end
-
-    # PATCH/PUT /heros/1
-    def update
-    if @hero.update(hero_params)
-        render json: @hero
-    else
-        render json: @hero.errors, status: :unprocessable_entity
-    end
-    end
-
-    # DELETE /heros/1
-    def destroy
-        @hero.destroy
-        head :no_content
+        hero = Hero.find(params[:id])  
+        render json: hero, serializer:
+        SingleheroSerializer
     end
 
     private
-    def set_hero
-        @hero = Hero.find(params[:id])
-    end
 
-    def hero_params
-        params.require(:hero).permit(:name, :super_name)
-    end
+  def render_not_found_response
+    render json: { error: "Hero not found" }, status: :not_found
+  end
+  
 end
